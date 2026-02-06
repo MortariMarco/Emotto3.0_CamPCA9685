@@ -72,20 +72,22 @@ Used to control the **DFPlayer Mini MP3 module**.
 
 ## 📏 Sensors
 
-### Adafruit VL53L0X  
+### Adafruit VL53L0X  ver 1.2.4 
+https://github.com/adafruit/Adafruit_VL53L0X 
 Library for the **VL53L0X Time-of-Flight distance sensor**.
 
 ---
 
 ## 🌈 LEDs
 
-### FastLED *or* Adafruit NeoPixel  
+### FastLED *or* Adafruit NeoPixel  ver 1.15.2
+https://github.com/adafruit/Adafruit_NeoPixel
 Used to control the **WS2812 LED ring** for EMOtto aura effects.
 
 ---
 
-## 🧠 ESP32 Board Support
+## 🧠 ESP32 Board Support 
 
 Install **ESP32 boards by Espressif** via the Arduino Boards Manager.  
-**Recommended version:** `2.0.17`
+**Recommended version:** `2.0.17` (only for •	ESP32 S3 N16R8 CAM)
 
