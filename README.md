@@ -108,8 +108,37 @@ The Android companion app allows:
 - 📡 BLE control using NimBLE
 - 📷 AI camera vision using EloquentEsp32cam
 - 🧭 Motion awareness via QMI8658 IMU (fall detection & recovery)
+- 👤 **Face recognition with personalized greetings**
 
 ---
+
+---
+
+## 👤 Face Recognition & Personalized Interaction
+
+EMOtto can **recognize people and greet them by name**.
+
+Using the camera module and on-device AI vision, the robot can identify previously enrolled faces and trigger personalized behaviors.
+
+### 📱 How It Works
+
+Through the mobile app, users can activate **Enroll Mode**:
+
+1. The camera detects a **new, unknown face**
+2. The app asks if you want to save the person
+3. You enter a **name**
+4. The face is stored in the recognition database
+
+From that moment on, when the person appears again, EMOtto can:
+
+- Recognize them  
+- Trigger a dedicated greeting expression  
+- Play a personalized audio response  
+
+This feature allows EMOtto to move from a generic robot to a **socially aware companion**.
+
+---
+
 
 ## 🚧 Project Status & Roadmap
 
