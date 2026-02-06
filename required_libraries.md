@@ -91,3 +91,8 @@ Used to control the **WS2812 LED ring** for EMOtto aura effects.
 Install **ESP32 boards by Espressif** via the Arduino Boards Manager.  
 **Recommended version:** `2.0.17` (only for •	ESP32 S3 N16R8 CAM)
 
+## 🦿 Custom EMOtto Library
+
+### EMOtto32_pca9685  
+Custom servo driver library optimized for EMOtto 3.0 motion system.  
+Located inside the repository under `/libraries/EMOtto32_pca9685`
