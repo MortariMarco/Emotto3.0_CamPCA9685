@@ -35,7 +35,7 @@ The boards communicate wirelessly and split the workload between **emotion rende
 | CAM Firmware | [Firmware_CAM](Firmware_CAM/) |
 | Face Assets (.bin) | [Assets/facce_bin](Assets/facce_bin/) |
 | Audio Files | [Assets/mp3](Assets/mp3/) |
-| Hardware & Setup Notes | [Configurazioni e librerie.docx](Configurazioni%20e%20librerie.docx) |
+| Hardware & Setup Notes | [hardware_notes.md](hardware_notes.md) |
 | All Images | [Docs/images](Docs/images/) |
 
 ---
