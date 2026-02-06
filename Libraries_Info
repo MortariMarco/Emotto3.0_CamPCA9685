@@ -1,50 +1,66 @@
-📚 EMOtto 3.0 — Required Arduino Libraries
+# 📚 EMOtto 3.0 — Required Arduino Libraries
 
 This project depends on the following libraries.
 
-Install them using Arduino IDE Library Manager or from the provided GitHub links.
+Install them using the **Arduino IDE Library Manager** or from the provided GitHub links.
 
-📡 Communication
-NimBLE-Arduino
+---
 
-Used for Bluetooth Low Energy communication between EMOtto and mobile apps.
+## 📡 Communication
 
-📷 Camera & AI Vision
-EloquentEsp32cam
+### NimBLE-Arduino  
+Used for **Bluetooth Low Energy** communication between EMOtto and mobile apps.
 
-Provides face detection and recognition features on the ESP32-S3 CAM board.
+---
+
+## 📷 Camera & AI Vision
+
+### EloquentEsp32cam  
+Provides **face detection and recognition** features on the ESP32-S3 CAM board.  
 https://github.com/eloquentarduino/EloquentEsp32cam
 
-JPEGDecoder (by Bodmer)
+### JPEGDecoder (by Bodmer)  
+Used to **decode JPEG images** from the camera stream.
 
-Used to decode JPEG images from the camera stream.
+---
 
-🖥 Display & Graphics
-LVGL
+## 🖥 Display & Graphics
 
+### LVGL  
 Graphics library used to render EMOtto facial expressions on the TFT display.
 
-🦿 Motion Control
-Adafruit PWM Servo Driver Library
+---
 
-Controls the PCA9685 16-channel servo driver.
+## 🦿 Motion Control
 
-🔊 Audio
-DFRobotDFPlayerMini
+### Adafruit PWM Servo Driver Library  
+Controls the **PCA9685 16-channel servo driver**.
 
-Used to control the DFPlayer Mini MP3 module.
+---
 
-📏 Sensors
-Adafruit VL53L0X
+## 🔊 Audio
 
-Library for the VL53L0X Time-of-Flight distance sensor.
+### DFRobotDFPlayerMini  
+Used to control the **DFPlayer Mini MP3 module**.
 
-🌈 LEDs
-FastLED or Adafruit NeoPixel
+---
 
-Used to control the WS2812 LED ring for EMOtto aura effects.
+## 📏 Sensors
 
-🧠 ESP32 Board Support
+### Adafruit VL53L0X  
+Library for the **VL53L0X Time-of-Flight distance sensor**.
 
-Install ESP32 boards by Espressif via Arduino Boards Manager.
-Recommended version: 2.0.17
+---
+
+## 🌈 LEDs
+
+### FastLED *or* Adafruit NeoPixel  
+Used to control the **WS2812 LED ring** for EMOtto aura effects.
+
+---
+
+## 🧠 ESP32 Board Support
+
+Install **ESP32 boards by Espressif** via the Arduino Boards Manager.  
+**Recommended version:** `2.0.17`
+
