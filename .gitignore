@@ -1,20 +1,14 @@
-# Windows junk
-desktop.ini
-Thumbs.db
+# ===============================
+# Arduino / build temporary files
+# ===============================
 
-# Arduino build junk
 *.elf
-*.bin
-*.map
 *.hex
+*.map
+*.tmp
+*.log
 
-# temp / cache
-.DS_Store
-.vscode/
-.idea/
-
-# library zips / backups
-LIBRERIE/
-*.zip
-*.bak
-*~
+# IMPORTANT:
+# Do NOT ignore .bin files globally.
+# In this project, .bin files are RGB565 facial assets used by EMOtto,
+# NOT compiled firmware binaries.
