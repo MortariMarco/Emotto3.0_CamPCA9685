@@ -8,6 +8,9 @@
 ![Framework](https://img.shields.io/badge/framework-Arduino-orange.svg)  
 ![Connectivity](https://img.shields.io/badge/Connectivity-BLE%20%7C%20WiFi-blue.svg)  
 ![Status](https://img.shields.io/badge/status-Active%20Development-brightgreen)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
+![Repo Size](https://img.shields.io/github/repo-size/MortariMarco/Emotto3.0_CamPCA9685)
+![Last Commit](https://img.shields.io/github/last-commit/MortariMarco/Emotto3.0_CamPCA9685)
 
 **EMOtto 3.0** is an open-source emotional robot platform based on **two ESP32-S3 boards**, designed to combine **animated expressions, motion, sound, and AI vision** into a single interactive companion.
 
@@ -104,8 +107,45 @@ The Android companion app allows:
 - 🌈 WS2812 RGB LED aura effects
 - 📡 BLE control using NimBLE
 - 📷 AI camera vision using EloquentEsp32cam
+- 🧭 Motion awareness via QMI8658 IMU (fall detection & recovery)
 
 ---
+
+## 🚧 Project Status & Roadmap
+
+EMOtto 3.0 is currently in **active development**.  
+New behaviors and capabilities are continuously being added.
+
+### 🧠 Emotional Engine (in progress)
+The robot already supports multiple animated expressions and synchronized behaviors.  
+Upcoming additions include:
+
+- More complex emotional states  
+- Context-aware reactions  
+- Expanded animation sets  
+
+### 🤖 Autonomous Behaviors (planned & in development)
+
+EMOtto is evolving from an expressive robot into an **interactive autonomous companion**.
+
+Planned features include:
+
+- 🏃 Face / person following behavior  
+- 🚧 Obstacle avoidance using distance sensing  
+- 👋 Social interaction routines  
+
+### 🧭 Motion Awareness (already implemented)
+
+Using the **QMI8658 IMU sensor**, EMOtto can:
+
+- Detect when it has fallen  
+- Understand its orientation  
+- Trigger recovery animations when standing up  
+
+This enables more lifelike and safe motion behavior.
+
+---
+
 
 ## ⚙️ ESP32-S3 CAM Settings (Arduino IDE)
 
@@ -125,6 +165,37 @@ The Android companion app allows:
 - `libraries/EMOtto32_pca9685/` — project core library (included)
 - `Assets/` — face `.bin` files and audio `.mp3`
 - `Docs/` — photos and wiring documentation
+
+---
+
+---
+
+## 🔮 Future Vision
+
+EMOtto 3.0 is more than a robot — it is a platform for exploring the intersection of **emotion, interaction, and autonomous behavior**.
+
+The long-term vision is to evolve EMOtto into:
+
+### 🤖 An Expressive Companion
+A robot capable of showing emotions through synchronized **face animations, movement, sound, and lighting**, creating a believable and engaging presence.
+
+### 🧠 An Interactive Learning Platform
+EMOtto is designed as a **maker-friendly educational platform**, helping students and developers explore:
+
+- Robotics
+- Embedded systems
+- Human-robot interaction
+- AI-based perception
+
+### 🌍 A Modular Open Robotics System
+The project is fully open-source and built to be **expandable**:
+
+- Add new sensors  
+- Create new emotions  
+- Implement autonomous behaviors  
+- Customize hardware and appearance  
+
+EMOtto aims to be a bridge between **creative robotics** and **technical learning**, where personality and engineering meet.
 
 ---
 
