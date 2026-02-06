@@ -56,14 +56,16 @@ To remove the **performance/debug widgets** shown on the display, edit `lv_conf.
 
 ## 🦿 Motion Control
 
-### Adafruit PWM Servo Driver Library  
+### Adafruit PWM Servo Driver Library  ver 3.0.2
+https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
 Controls the **PCA9685 16-channel servo driver**.
 
 ---
 
 ## 🔊 Audio
 
-### DFRobotDFPlayerMini  
+### DFRobotDFPlayerMini  ver 1.0.6
+https://github.com/DFRobot/DFRobotDFPlayerMini
 Used to control the **DFPlayer Mini MP3 module**.
 
 ---
