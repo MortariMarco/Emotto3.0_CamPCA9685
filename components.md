@@ -84,3 +84,4 @@ Below is the list of main hardware components required to build **EMOtto 3.0**.
 
 This list covers the **standard EMOtto 3.0 configuration**.  
 Custom builds may add or replace components depending on design.
+
