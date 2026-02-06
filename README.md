@@ -15,15 +15,27 @@ A creative robotics platform for **makers, educators, and developers**.
 
 ---
 
+## 🚀 Getting Started
+
+1. Flash the **CAM board** → `Firmware_CAM/`  
+2. Flash the **LCD board** → `Firmware_LCD/`  
+3. Follow wiring guide → **Docs/hardware_notes.md**  
+4. Configure Arduino IDE → **firmware_setup.md**  
+5. Install required libraries → **required_libraries.md**
+
+---
+
 ## 🧠 System Architecture
 
-EMOtto uses **two independent ESP32-S3 boards working together**.  
-The boards communicate wirelessly and split the workload between **emotion rendering** and **vision intelligence**.
+EMOtto uses **two independent ESP32-S3 boards working together**.
+
+- **WiFi** is used for camera streaming  
+- **UART (Serial1)** is used for command/control between CAM ↔ LCD  
 
 | Board | Role |
 |------|------|
 | 🖥 **Waveshare ESP32-S3 LCD board** | Face animations, audio playback, servo control, sensors, BLE |
-| 📷 **ESP32-S3 N16R8 CAM** | WiFi server, camera streaming, face recognition (Eloquent), UART server for expressions & audio triggers |
+| 📷 **ESP32-S3 N16R8 CAM** | Camera streaming and face recognition (Eloquent) |
 
 ---
 
@@ -33,9 +45,13 @@ The boards communicate wirelessly and split the workload between **emotion rende
 |--------|------|
 | LCD Firmware | [Firmware_LCD](Firmware_LCD/) |
 | CAM Firmware | [Firmware_CAM](Firmware_CAM/) |
+| Hardware Notes & Wiring | [Docs/hardware_notes.md](Docs/hardware_notes.md) |
+| Required Libraries | [required_libraries.md](required_libraries.md) |
+| Firmware Setup (Arduino IDE) | [firmware_setup.md](firmware_setup.md) |
+| Components (BOM) | [components.md](components.md) |
+| Estimated Cost | [cost_estimate.md](cost_estimate.md) |
 | Face Assets (.bin) | [Assets/facce_bin](Assets/facce_bin/) |
 | Audio Files | [Assets/mp3](Assets/mp3/) |
-| Hardware & Setup Notes | [Docs/hardware_notes.md](Docs/hardware_notes.md) |
 | All Images | [Docs/images](Docs/images/) |
 
 ---
@@ -59,7 +75,7 @@ The Android companion app allows:
 ## 🧩 Hardware Overview
 
 | Component | Function |
-|-----------|----------|
+|----------|----------|
 | ESP32-S3 LCD Board | Main controller & display |
 | ESP32-S3 CAM | Vision processor |
 | PCA9685 | 16-channel servo driver |
@@ -102,9 +118,19 @@ The Android companion app allows:
 
 ---
 
+## 🗂 Repository Structure
+
+- `Firmware_LCD/` — main robot firmware (display, BLE, servos, audio)
+- `Firmware_CAM/` — camera + recognition + streaming server
+- `libraries/EMOtto32_pca9685/` — project core library (included)
+- `Assets/` — face `.bin` files and audio `.mp3`
+- `Docs/` — photos and wiring documentation
+
+---
+
 ## 📜 License
 
-This project is released under **GPL-3.0-only**.
+This project is released under the **GPL-3.0-only License**.
 
 ---
 
@@ -120,10 +146,6 @@ This project is released under **GPL-3.0-only**.
 
 Ideas, improvements, and pull requests are welcome.  
 EMOtto is an open platform built for the maker community.
-
-
-
-
 
 
 
