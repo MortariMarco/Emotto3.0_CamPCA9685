@@ -63,7 +63,7 @@ DIN	U0TXD (through 330Ω resistor)
 VCC	5V
 GND	GND
 
-Add a 470–1000µF capacitor across 5V and GND near the LEDs.
+optional: Add a 470–1000µF capacitor across 5V and GND near the LEDs.
 
 ⚡ Power Supply Notes
 
