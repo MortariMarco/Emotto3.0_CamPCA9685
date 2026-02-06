@@ -107,10 +107,9 @@ The Android companion app allows:
 - 🌈 WS2812 RGB LED aura effects
 - 📡 BLE control using NimBLE
 - 📷 AI camera vision using EloquentEsp32cam
+- 👤 Face recognition with personalized greetings
+- 🎥 **Live camera stream viewable in the mobile app**
 - 🧭 Motion awareness via QMI8658 IMU (fall detection & recovery)
-- 👤 **Face recognition with personalized greetings**
-
----
 
 ---
 
@@ -196,6 +195,114 @@ Due to memory and processing constraints of the ESP32-S3:
   - Moderate distance from camera  
 
 Despite these limits, the system provides a **lightweight embedded face recognition solution** suitable for interactive robotics.
+
+---
+
+---
+
+## 🎥 Live Camera Streaming
+
+EMOtto allows users to see **live video from the robot’s camera directly inside the mobile app**.
+
+The ESP32-S3 CAM board runs a lightweight WiFi streaming server that:
+
+- Captures JPEG frames from the camera
+- Streams them over the local network
+- Displays the live feed inside the app interface
+
+### 📱 What This Enables
+
+- Remote monitoring of EMOtto’s surroundings  
+- Better interaction during face recognition  
+- A more immersive user experience  
+
+The stream runs entirely on the **local WiFi network**, keeping latency low and avoiding cloud dependency.
+
+---
+
+---
+
+## 📡 BLE Communication Protocol
+
+EMOtto communicates with the mobile app using **Bluetooth Low Energy (BLE)**.  
+Commands are sent as **plain text strings** in a simple and extendable format.
+
+### 🧩 Command Structure
+
+Commands follow this pattern:
+
+
+Example:
+
+---
+
+### 🎭 Expression Commands
+
+| Command | Description |
+|--------|-------------|
+| `EXPR|NATURAL` | Neutral expression |
+| `EXPR|HAPPY` | Happy emotion |
+| `EXPR|SAD` | Sad emotion |
+| `EXPR|ANGRY` | Angry emotion |
+| `EXPR|LOVE` | Love emotion |
+| `EXPR|SING` | Singing mode |
+| `EXPR|DANCE` | Dancing mode |
+
+---
+
+### 🦿 Motion Commands
+
+| Command | Description |
+|--------|-------------|
+| `MOVE|FWD` | Move forward |
+| `MOVE|BWD` | Move backward |
+| `MOVE|LEFT` | Turn left |
+| `MOVE|RIGHT` | Turn right |
+| `MOVE|STOP` | Stop movement |
+
+---
+
+### 🔊 Audio Commands
+
+| Command | Description |
+|--------|-------------|
+| `VOL|+` | Increase volume |
+| `VOL|-` | Decrease volume |
+| `VOL|SET:x` | Set volume (0–30) |
+
+---
+
+### 👤 Face Recognition Commands
+
+| Command | Description |
+|--------|-------------|
+| `ENROLL|START` | Start face enrollment mode |
+| `ENROLL|STOP` | Stop enrollment mode |
+| `RECOG|ON` | Enable face recognition |
+| `RECOG|OFF` | Disable face recognition |
+
+---
+
+### 🎥 Camera Commands
+
+| Command | Description |
+|--------|-------------|
+| `CAM|STREAM_ON` | Start live video streaming |
+| `CAM|STREAM_OFF` | Stop video streaming |
+
+---
+
+### 🧠 System Commands
+
+| Command | Description |
+|--------|-------------|
+| `SYS|SLEEP` | Put EMOtto into sleep mode |
+| `SYS|WAKE` | Wake EMOtto up |
+| `SYS|STATUS` | Request system status |
+
+---
+
+This protocol is designed to be **human-readable and easy to expand** as new features are added.
 
 ---
 
