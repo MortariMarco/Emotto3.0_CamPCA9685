@@ -139,6 +139,75 @@ This feature allows EMOtto to move from a generic robot to a **socially aware co
 
 ---
 
+## 🧠 Technical Overview — Face Enrollment & Recognition
+
+EMOtto uses on-device vision processing to perform **face detection and recognition** directly on the ESP32-S3 CAM board.
+
+### 📸 Face Detection & Recognition
+
+The camera module runs the **EloquentEsp32cam** library to:
+
+- Detect faces in the camera frame
+- Extract facial features
+- Compare them with stored face profiles
+
+All processing happens **locally on the robot**, without needing cloud services.
+
+---
+
+### 📂 Face Database Storage
+
+When a new person is enrolled through the app:
+
+1. The system captures multiple face samples
+2. A facial profile is generated
+3. The profile is stored in the ESP32-S3 CAM memory (SPIFFS / Flash)
+
+Each stored profile is linked to:
+
+- A **person’s name**
+- A unique **face ID**
+
+This allows EMOtto to associate a recognized face with a specific identity.
+
+---
+
+### 👋 Recognition Workflow
+
+When the camera detects a face:
+
+1. The system checks if the face matches a stored profile  
+2. If a match is found:
+   - The associated **name** is returned  
+   - A personalized greeting can be triggered  
+3. If the face is **unknown**:
+   - The app can prompt the user to enroll the new person
+
+---
+
+### ⚙️ System Limits
+
+Due to memory and processing constraints of the ESP32-S3:
+
+- The number of stored faces is **limited**
+- Recognition works best with:
+  - Good lighting  
+  - Frontal face view  
+  - Moderate distance from camera  
+
+Despite these limits, the system provides a **lightweight embedded face recognition solution** suitable for interactive robotics.
+
+---
+
+### 🔒 Privacy by Design
+
+All facial data is stored **locally on the device**.  
+EMOtto does **not** upload images or biometric data to external servers.
+
+This makes the system suitable for educational and home environments where privacy is important.
+
+---
+
 
 ## 🚧 Project Status & Roadmap
 
