@@ -1,0 +1,31 @@
+{
+  "name": "EMOtto32_pca9685",
+  "version": "1.0.0",
+  "description": "EMOtto 3.0 core Arduino library for ESP32-S3: face engine, BLE commands, camera bridge helpers, and PCA9685 servo motion.",
+  "keywords": [
+    "camera",
+    "emotto",
+    "emotto3",
+    "esp32",
+    "lvgl",
+    "nimble",
+    "pca9685",
+    "robot",
+    "servo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MortariMarco"
+  },
+  "authors": [
+    {
+      "name": "Marco Mortari",
+      "email": "marco.mortari@gmail.com",
+      "url": "https://github.com/MortariMarco",
+      "maintainer": true
+    }
+  ],
+  "license": "GPL-3.0-only",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}
