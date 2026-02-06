@@ -70,8 +70,12 @@ The Android companion app allows:
 
 - Expression selection  
 - Motion control  
+- Movement speed adjustment  
 - Volume adjustment  
+- Audio equalizer control  
+- Face enrollment for recognition  
 - Camera live stream  
+
 
 ---
 
