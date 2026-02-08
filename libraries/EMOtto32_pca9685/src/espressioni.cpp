@@ -46,6 +46,21 @@ extern HWCDC USBSerial;
 
 static void Expr_ApplyAssetsNow(const ExprAssets& A, ExprState& S);
 
+static void Lifted_MoveLegs() {
+  // movimento corto: 200–600ms totale (non bloccare troppo)
+  // scegli UNA delle seguenti, dipende da cosa supporta la tua libreria Otto:
+
+  // Opzione A: “shake leg” (molto effetto panico)
+  Otto.shakeLeg(1, 500, 1);   // (steps, T, dir)  dir 1 o -1
+
+  // Opzione B: mini “bend” (si abbassa e risale)
+   Otto.bend(1, 450, 1);
+
+  // Opzione C: un micro passo avanti-indietro
+  // Otto.walk(1, 450, 1);
+  // Otto.walk(1, 450, -1);
+}
+
 //neopixel
  static AuraWS2812 gAura(WS_PIN, WS_LEDS);
 static bool gAuraInit = false;
@@ -576,7 +591,38 @@ static const ExprAssets A_WAKE = {
 };
 
 
+// --------- ASSET LIFTED ---------
+static const char* LIF_EYES[]  = { "occhi_cielo.bin","occhi_digrigna.bin","occhi_paura_c.bin","occhi_arrabbiati.bin" };
+static const char* LIF_MOUTH[] = { "b_paura.bin","digrigna.bin","bocca_preoccu.bin","O.bin" };
 
+// --------- LIFTED (3 voci) ---------
+static const char* TALK_LIF_V1[] = {"A.bin","I.bin","U.bin","T.bin","O.bin","O.bin"}; // 6 frame
+static const char* TALK_LIF_V2[] = {"A.bin","I.bin","I.bin"};                          // 3 frame, più secca
+static const char* TALK_LIF_V3[] = {"A.bin","R.bin","R.bin","R.bin"};                  // 4 frame, “digrigna”
+
+static const TalkVariant LIF_TALKS[] = {
+  { 7, TALK_LIF_V1, (uint8_t)(sizeof(TALK_LIF_V1)/sizeof(TALK_LIF_V1[0])), 140, 1800 },//AIUTO.
+  { 48, TALK_LIF_V2, (uint8_t)(sizeof(TALK_LIF_V2)/sizeof(TALK_LIF_V2[0])), 110, 1200 },//AHII.
+  { 50, TALK_LIF_V3, (uint8_t)(sizeof(TALK_LIF_V3)/sizeof(TALK_LIF_V3[0])), 120, 1500 },//Arghhhh
+};
+static const ExprAssets A_LIF = {
+  LIF_EYES, (uint8_t)(sizeof(LIF_EYES)/sizeof(LIF_EYES[0])), "occhi_chiusi.bin",
+  LIF_MOUTH,(uint8_t)(sizeof(LIF_MOUTH)/sizeof(LIF_MOUTH[0])), "B_paura_c.bin",
+  LIF_TALKS,(uint8_t)(sizeof(LIF_TALKS)/sizeof(LIF_TALKS[0])),
+  // --- OCCHI (esempio) ---
+  4000, 5000,   // eyesOpenMin,  eyesOpenMax
+  150,  200,    // eyesBlinkMin, eyesBlinkMax
+  15,   45,     // eyesStayPct,  eyesRandPct
+  0,            // eyesDoubleBlinkPct
+
+  // --- BOCCA (qui regoli il “blink” della bocca in idle) ---
+  3000, 6000,   // mouthOpenMin,  mouthOpenMax   -> meno/ più frequente
+  130,  180,    // mouthBlinkMin, mouthBlinkMax  -> più/meno veloce la chiusura
+  10,   40,     // mouthStayPct,  mouthRandPct   -> “resta” / “random” variante
+  0,            // mouthDoubleBlinkPct           -> colpetto doppio (%)
+
+  +800          // speechOffsetMs (sync audio/bocca)
+};
 
 
 
@@ -658,6 +704,14 @@ case ExprKind::Wakeup: {
   speechMs = WAKE_TALKS[i].speechMsDefault;
   return true;
 }
+    case ExprKind::Lifted: {
+      const uint8_t n = (uint8_t)(sizeof(LIF_TALKS)/sizeof(LIF_TALKS[0]));
+      const uint8_t i = (variantIndex - 1) % n;
+      track    = LIF_TALKS[i].track;
+      frameMs  = LIF_TALKS[i].frameMsDefault;
+      speechMs = LIF_TALKS[i].speechMsDefault;
+      return true;
+    }
 
   }
   return false;
@@ -684,7 +738,7 @@ void Expressions_PlayVariant(ExprKind kind, uint8_t variantIndex) {
 
 // --------- STATI ----------
 static ExprState S_NAT, S_ANG, S_FEAR, S_GRE, S_SAD;
-static ExprState S_SLEEP, S_WAKE, S_YAWN;
+static ExprState S_SLEEP, S_WAKE, S_YAWN, S_LIF;
 static ExprKind gActive = ExprKind::Natural;
 
 static inline const ExprAssets& assetsOf(ExprKind k){
@@ -696,6 +750,7 @@ static inline const ExprAssets& assetsOf(ExprKind k){
     case ExprKind::Sleep:    return A_SLEEP; // 🔹
     case ExprKind::Wakeup:   return A_WAKE;  // 🔹
     case ExprKind::Yawn:     return A_YAWN;  // 🔹
+	case ExprKind::Lifted: return A_LIF; 
 	default:               return A_NAT;
   }
 }
@@ -708,6 +763,7 @@ static inline ExprState& stateOf(ExprKind k){
     case ExprKind::Sleep:    return S_SLEEP; // 🔹
     case ExprKind::Wakeup:   return S_WAKE;  // 🔹
     case ExprKind::Yawn:     return S_YAWN;  // 🔹
+	case ExprKind::Lifted: return S_LIF;
 	default:               return S_NAT;
   }
 }
@@ -724,6 +780,7 @@ void Expressions_Init(){
   Expr_Init(A_SLEEP,S_SLEEP);  // 🔹
   Expr_Init(A_WAKE, S_WAKE);   // 🔹
   Expr_Init(A_YAWN, S_YAWN);   // 🔹
+  Expr_Init(A_LIF, S_LIF);
   gActive = ExprKind::Natural;
   sLastActivityMs = millis();
   sSleepMode = false;
@@ -749,6 +806,7 @@ static ExprKind NextExprKind(ExprKind cur) {
     case ExprKind::Wakeup:
     case ExprKind::Sleep:
     case ExprKind::Sing:
+	case ExprKind::Lifted: 
     default:
       return ExprKind::Natural;
   }
@@ -833,14 +891,29 @@ void Expressions_Play(ExprKind kind, int16_t track, uint16_t frameMsOverride, ui
     // stop pulito del precedente prima di cambiare
     Expr_Stop(assetsOf(gActive), stateOf(gActive));
     gActive = kind;
-	  AuraEnsureInit();
-  gAura.update(millis(), gActive);
+
+    AuraEnsureInit();
+    gAura.update(millis(), gActive);
 
     stateOf(kind).activeAssetsSet = false;
     Expr_ApplyAssetsNow(assetsOf(kind), stateOf(kind));  // primo frame del nuovo
   }
+
+  // ✅ 1) AVVIA PRIMA l'espressione (audio + mouth-seq)
   Expr_Play(assetsOf(kind), stateOf(kind), track, frameMsOverride, speechMsOverride);
+
+  // ✅ 2) Se Lifted: forza un refresh schermo prima del movimento bloccante
+  if (kind == ExprKind::Lifted) {
+    unsigned long t = millis();
+    Faces_LvglLoop();
+    updateFaces(t);
+    Faces_SyncUpdate(t);
+
+    // ✅ 3) ORA fai il movimento gambe (bloccante)
+    Lifted_MoveLegs();
+  }
 }
+
 
 
 void Expressions_Stop(ExprKind kind){
@@ -895,3 +968,4 @@ static void Expr_ApplyAssetsNow(const ExprAssets& A, ExprState& S){
   Faces_ShowEyes(/*closed=*/false);
   Faces_ShowMouth();
 }
+
