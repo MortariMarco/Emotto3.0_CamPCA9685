@@ -201,19 +201,18 @@ void Expr_Update(const ExprAssets& A, ExprState& S, unsigned long now){
     }
   }
 
- if (S.mode == ExprState::Talk && (int32_t)(now - (int32_t)S.phaseUntil) >= 0) {
-  Faces_StopMouthSequence();
+  if (S.mode == ExprState::Talk && (int32_t)(now - (int32_t)S.phaseUntil) >= 0) {
+    Faces_StopMouthSequence();
 
-  // ✅ torna SUBITO alla bocca idle (sorriso), niente frame appiccicato
-  Faces_ShowMouth();
+    // ✅ torna SUBITO alla bocca idle (sorriso), niente frame appiccicato
+    Faces_ShowMouth();
 
-  FaceBlink::Enable(true, true);
-  FaceBlink::ResetPhases(millis());
+    FaceBlink::Enable(true, true);
+    FaceBlink::ResetPhases(millis());
 
-  S.mode        = ExprState::IdleLoop;
-  S.phaseUntil  = 0;
-  S.mouthNextTs = now + 80; // riparte presto, non dopo 3–6s
+    S.mode        = ExprState::IdleLoop;
+    S.phaseUntil  = 0;
+    S.mouthNextTs = now + 80; // riparte presto, non dopo 3–6s
+  }
 }
 
-
-}
