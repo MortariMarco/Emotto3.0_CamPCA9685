@@ -5,7 +5,7 @@
 
 
 // Identificatore espressione
-enum class ExprKind : uint8_t { Natural = 0, Angry = 1, Fear = 2, Greeting = 3, Sadness = 4, Embarrassment = 5, Disgust = 6, Anxiety = 7, Boredom = 8, Sleep = 9, Wakeup = 10, Love = 11, Avoid = 12, Dance = 13, Sing = 14, Run = 15, Yawn = 16 };
+enum class ExprKind : uint8_t { Natural = 0, Angry = 1, Fear = 2, Greeting = 3, Sadness = 4, Embarrassment = 5, Disgust = 6, Anxiety = 7, Boredom = 8, Sleep = 9, Wakeup = 10, Love = 11, Avoid = 12, Dance = 13, Sing = 14, Run = 15, Yawn = 16, Lifted=17 };
 
 // -------- Manager ad alto livello --------
 // Internamente mantiene 1 ExprState per preset e uno "attivo" corrente.
@@ -54,3 +54,4 @@ void Expressions_DrawZzzOverlay();
 void Aura_BootBegin();
 void Aura_BootTick(unsigned long now);
 bool Aura_BootIsRunning();
+
