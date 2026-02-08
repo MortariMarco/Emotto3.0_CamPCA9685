@@ -26,12 +26,14 @@ void ExpressionsCmd_Init(HWCDC* serial) {
 }
 
 void ExpressionsCmd_UpdateIdle(unsigned long now) {
+
+
+
   unsigned long idle = now - gLastActivityMs;
 
   if (!gSleepMode) {
     if (!gYawnDone && idle > IDLE_YAWN_MS && idle < IDLE_SLEEP_MS) {
       gYawnDone = true;
-      // se hai definito YAWN_TALKS in espressioni.cpp:
       Expressions_PlayVariant(ExprKind::Yawn, 1);
       if (gSerial) gSerial->println("[EXP] auto-YAWN");
     }
@@ -43,6 +45,7 @@ void ExpressionsCmd_UpdateIdle(unsigned long now) {
     }
   }
 }
+
 
 // helper: estrae eventuale numero a fine comando, 0 se assente/non valido
 static int parseIndex(const String& cmd) {
