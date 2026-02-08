@@ -530,11 +530,30 @@ void Faces_DeferWhoNow(); // forward (WHO debounce)
 
 void handleIMUOnly(unsigned long now) {
   if (!gQmiPresent) return;
-  if (!qmi.getDataReady()) return;
+
+  // Campionamento a tempo (più robusto di getDataReady)
+  static unsigned long imuLast = 0;
+  if (now - imuLast < 8) return;   // ~125 Hz
+  imuLast = now;
 
   float ax, ay, az;
   if (!qmi.getAccelerometer(ax, ay, az)) return;
 
+  float gx = 0, gy = 0, gz = 0;
+  (void)qmi.getGyroscope(gx, gy, gz);
+
+  const float accMag  = sqrtf(ax*ax + ay*ay + az*az);
+  const float gyroMag = sqrtf(gx*gx + gy*gy + gz*gz);
+
+  // DEBUG SEMPRE (rate limit)
+  static unsigned long dbgT = 0;
+  if (now - dbgT >= 150) {
+    dbgT = now;
+    USBSerial.printf("[IMU RAW] acc=%.2f gyro=%.1f ax=%.2f ay=%.2f az=%.2f\n",
+                     accMag, gyroMag, ax, ay, az);
+  }
+
+  // ===================== WORRIED / TILT (INVARIATO) =====================
   const float TILT_ON_AY   = 0.80f;
   const float TILT_OFF_AY  = 0.90f;
   const float TILT_ON_AXZ  = 0.50f;
@@ -551,7 +570,6 @@ void handleIMUOnly(unsigned long now) {
     const char* eyesArr[1]  = { wOpen  };
     const char* mouthArr[1] = { wMouth };
 
-    // Applica assets worried (usa BlinkSetAssetsRaw: semplice e coerente)
     Faces_BlinkSetAssetsRaw(
       eyesArr, 1, wClosed,
       mouthArr, 1, wMouth,
@@ -598,7 +616,146 @@ void handleIMUOnly(unsigned long now) {
       sNormalSince = 0;
     }
   }
+
+  // ===================== PICKED UP (LIFTED) + PUT DOWN =====================
+  {
+    static unsigned long cooldownUntil = 0;
+
+    static unsigned long stillSince = 0;
+    static bool          armed      = false;
+    static unsigned long armUntil   = 0;
+
+    // stato “in mano”
+    static bool          inHand     = false;
+    static unsigned long restSince  = 0;
+
+    // Gate: se worried/tilt attivi, non fare Lifted né put-down
+    if (gWorriedMode || sTiltActive) {
+      stillSince = 0;
+      armed = false;
+      // NON resetto inHand qui: se lo stai tenendo e parte worried, non voglio rimbalzi
+      return;
+    }
+
+    // Gate: non durante modalità "attive" (come volevi)
+    const ExprKind k = Expressions_GetActive();
+    const bool blocked =
+        (k == ExprKind::Dance || k == ExprKind::Sing || k == ExprKind::Run || k == ExprKind::Avoid ||
+         k == ExprKind::Fear  || k == ExprKind::Sleep || k == ExprKind::Yawn);
+    if (blocked) {
+      stillSince = 0;
+      armed = false;
+      return;
+    }
+
+    // Cooldown dopo trigger / after put-down
+    if ((int32_t)(now - (int32_t)cooldownUntil) < 0) {
+      stillSince = 0;
+      armed = false;
+      return;
+    }
+
+    // ---- (A) SE È IN MANO: cerco il “riappoggiato” e torno Natural ----
+    if (inHand) {
+      const bool restNow = (accMag > 0.98f && accMag < 1.12f) && (gyroMag < 3.0f);
+
+      if (restNow) {
+        if (restSince == 0) restSince = now;
+
+        if ((now - restSince) >= 600) {
+          USBSerial.println("[IMU] put down -> NATURAL");
+
+          inHand = false;
+          restSince = 0;
+
+          // torna a Natural
+          Expressions_SetActive(ExprKind::Natural);
+
+          // opzionale: vocina “grazie”
+           Expressions_PlayVariant(ExprKind::Natural, 4);
+
+          Faces_DeferWhoNow();
+
+          // piccolo cooldown per evitare retrigger mentre lo sistemi
+          cooldownUntil = now + 1200;
+
+          // reset macchina stati pickup
+          armed = false;
+          stillSince = 0;
+          return;
+        }
+      } else {
+        restSince = 0;
+      }
+
+      // mentre è in mano non faccio arming/trigger pickup
+      return;
+    }
+
+    // ---- (B) NON è in mano: gestisco ARMING + TRIGGER pickup ----
+
+    // STILL only for ARMING (anti-camminata)
+    const bool stillNow = (accMag > 0.98f && accMag < 1.12f) && (gyroMag < 3.5f);
+
+    // 1) ARMING
+    if (!armed) {
+      if (stillNow) {
+        if (stillSince == 0) stillSince = now;
+        if ((now - stillSince) >= 700) {
+          armed = true;
+          armUntil = now + 3000; // finestra comoda
+          USBSerial.println("[IMU] armed for pickup");
+        }
+      } else {
+        stillSince = 0;
+      }
+      return;
+    }
+
+    // 2) ARMED: aspetto evento entro finestra
+    if ((int32_t)(now - (int32_t)armUntil) >= 0) {
+      armed = false;
+      stillSince = 0;
+      return;
+    }
+
+    // Debug solo mentre armato
+    static unsigned long armDbg = 0;
+    if (now - armDbg >= 120) {
+      armDbg = now;
+      USBSerial.printf("[IMU ARM] acc=%.2f gyro=%.1f left=%ldms\n",
+                       accMag, gyroMag, (long)((int32_t)armUntil - (int32_t)now));
+    }
+
+    // 3) TRIGGER pickup
+    const float GYRO_PICK_THR = 7.0f;
+    const float ACC_HIGH_THR  = 1.35f;
+    const float ACC_LOW_THR   = 0.92f;
+
+    const bool trig = (gyroMag >= GYRO_PICK_THR) || (accMag >= ACC_HIGH_THR) || (accMag <= ACC_LOW_THR);
+
+    if (trig) {
+      USBSerial.printf("[IMU] PICKUP -> LIFTED (acc=%.2f gyro=%.1f)\n", accMag, gyroMag);
+
+      Expressions_NotifyUserActivity(now);
+      Expressions_PlayVariant(ExprKind::Lifted, 1);
+      Faces_DeferWhoNow();
+
+      // passa a stato in mano (aspetta put-down)
+      inHand = true;
+      restSince = 0;
+
+      // reset pickup + cooldown
+      cooldownUntil = now + 3000;
+      armed = false;
+      stillSince = 0;
+      return;
+    }
+  }
 }
+
+
+
 
 // =============================================================================
 // WHO (face recognition)
@@ -737,3 +894,5 @@ void updateFaces(unsigned long now) {
     }
   }
 }
+
+
